@@ -25,15 +25,6 @@ def client():
     server_binding = (localhost_addr, port)
     cs.connect(server_binding)
 
-    sending = 'GOOGLE.com'
-    send_message(cs, sending)
-
-
-    rec = receive_message(cs)
-    fi = open('RESOLVED.txt', 'w')
-    print >> fi, rec.strip('\n')
-    exit()
-    
 
     #send from file
     fi = open('PROJ2-HNS.txt', 'r')
