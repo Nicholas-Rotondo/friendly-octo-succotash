@@ -22,11 +22,11 @@ class Server:
         localhost_addr = socket.gethostbyname(socket.gethostname())
 
         ts1_port = 50007
-        self.ts1.connect(localhost_addr, ts1_port)
+        self.ts1.connect((localhost_addr, ts1_port))
         print("connected to ts1 at {}:{}".format(localhost_addr, ts1_port))
 
         ts2_port = 50008
-        self.ts2.connect(localhost_addr, ts2_port)
+        self.ts2.connect((localhost_addr, ts2_port))
         print("connected to ts1 at {}:{}".format(localhost_addr, ts2_port))
         
         
