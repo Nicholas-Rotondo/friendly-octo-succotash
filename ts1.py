@@ -13,7 +13,7 @@ except socket.error as err:
     exit()
 
 def get_connection():
-    server_binding = ('', 50008)
+    server_binding = ('', 50007)
     ss.bind(server_binding)
     ss.listen(1)
     host = socket.gethostname()
