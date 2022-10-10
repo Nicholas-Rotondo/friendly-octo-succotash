@@ -94,6 +94,8 @@ def check_answers():
         if(valid_ips[valid_doms.index(first)] != second):
             print("domain {} does not match ip {}".format(first, second))
 
+        
+
     f.close()
     f = open('PROJ2-HNS.txt', 'r')
 
