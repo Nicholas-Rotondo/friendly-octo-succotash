@@ -24,7 +24,7 @@ def get_connection():
     print ("[S]: Got a connection request from a client at {}".format(addr))
     csockid.send(msg.encode('utf-8'))
 
-    file_name = "./out-proj.txt"
+    file_name = "PROJ2-DNSTS1.txt"
     # write elements in data into file_name with each element in a seperate line
     with open(file_name, 'w') as f:
         flag = True
