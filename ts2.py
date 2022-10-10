@@ -22,7 +22,7 @@ def get_connection():
     print("[S]: Server IP address is {}".format(localhost_ip))
     csockid, addr = ss.accept()
     print ("[S]: Got a connection request from a client at {}".format(addr))
-    csockid.send(msg.encode('utf-8'))
+    #csockid.send(msg.encode('utf-8'))
 
     file_name = "PROJ2-DNSTS2.txt"
     # write elements in data into file_name with each element in a seperate line
