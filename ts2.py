@@ -33,12 +33,25 @@ def get_connection():
 
     file_name = "PROJ2-DNSTS2.txt"
     # write elements in data into file_name with each element in a seperate line
-    new_data = receive_from_client(csockid)
+    #new_data = receive_from_client(csockid)
+
+    new_data = ""
+    rec = receive_message(csockid)
+    while(len(rec) > 0):
+        new_data = new_data + rec
+        rec = receive_message(csockid)
+
+    array_data = new_data.split("\n")
+    for i in array_data:
+        print(i)
+        ret_data(i, file_name)
+
+
+def ret_data(dns, file_name):
     with open(file_name, 'r') as f:
         for line in f:
-            if(line.split(" ")[0] == new_data):
+            if(line.split(" ")[0] == dns):
                 send_to_client(csockid, line)
-
 
 get_connection()
 ss.close()
