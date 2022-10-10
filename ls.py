@@ -1,4 +1,4 @@
-from socket import socket, select
+import socket, select
 
 class Server:
     def __init__(self):
@@ -10,7 +10,7 @@ class Server:
             print('socket open error: {}\n'.format(err))
             exit()
 
-        cli.bind('', 50006)
+        cli.bind(('', 50006))
         
         
         
