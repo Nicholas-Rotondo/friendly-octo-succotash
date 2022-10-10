@@ -1,3 +1,4 @@
+import time
 import socket, select
 
 class Server:
@@ -31,10 +32,25 @@ class Server:
         
         
     def run_server(self):
+        gotten = ''
         rec = self.receive_from_client()
-        self.dns_request(rec)
-        resp = self.get_ts_response()
-        self.send_to_client(resp)
+        while(rec != None and len(rec) > 0):
+            gotten = gotten + rec
+            rec = self.receive_from_client()
+        
+        
+        self.dns_request(gotten)
+
+        broken_up = rec.split("\n")
+        curr = 0
+        gotten = ''
+        resp = self.get_ts_response(broken_up[curr])
+        while(resp != None and len(resp) > 0):
+            gotten = gotten + resp
+            curr = curr + 1
+            resp = self.get_ts_response(broken_up[curr])
+
+        self.send_to_client(gotten)
 
 
     def send_to_client(self, msg):
@@ -51,12 +67,15 @@ class Server:
         self.ts1.send(name.encode('utf-8'))
         self.ts2.send(name.encode('utf-8'))
 
-    def get_ts_response(self):
+    def get_ts_response(self, cli_data):
         can_read, can_write, exceps = select.select([self.ts1, self.ts2], [], [], 10)
         data = 'nothing read'
         if(len(can_read) == 0):
-            print("NO ONE RESPONDED !!!! (farts and dies)")
-            exit()
+            time.sleep(3)
+            if(len(can_read) == 0):
+                #nothinghere.com - TIMED OUT
+                return cli_data + " - TIMED OUT"
+                
         for i in can_read:
             data = i.recv(220)
         return data
