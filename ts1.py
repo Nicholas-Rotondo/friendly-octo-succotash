@@ -3,6 +3,8 @@ import time
 import random
 import socket
 
+print("hello")
+
 dns_table = {
     'domain_name': 'string',
     'ip_address': 'string',
