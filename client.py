@@ -1,47 +1,25 @@
+import errno
 import socket
+import select
 
-def send_message(sock, msg):
-    sock.send(msg.encode('utf-8'))
+sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+sock.connect(('localhost', 50008))
+sock.setblocking(0)
 
-def receive_message(sock):
-    raw_dat = sock.recv(100)
-    #cleaned = str(raw_dat, 'utf-8')
-    cleaned = raw_dat.decode('utf-8')
-    return cleaned
+data = 'ls.py' * 1024 * 1024
+data_size = len(data)
+print 'Bytes to send: ', len(data)
+total_sent = 0
 
-def send_from_file(cs, f):
-    fi = open(f, 'r')
-    for line in fi:
-        send_message(cs, line)
-    fi.close()
-
-
-def client():
+while len(data):
     try:
-        cs = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        print("[C]: Client socket created")
-    except socket.error as err:
-        print('socket open error: {} \n'.format(err))
-        exit()
-        
-    # Define the port on which you want to connect to the server
-    port = 50007
-    localhost_addr = socket.gethostbyname(socket.gethostname())
-
-    # connect to the server on local machine
-    server_binding = (localhost_addr, port)
-    cs.connect(server_binding)
-    print(type(cs))
-    # Receive data from the server
-    data_from_server=cs.recv(100)
-    print("[C]: Data received from server: {}".format(data_from_server.decode('utf-8')))
-
-    #send from file
-    
-
-    # close the client socket
-    cs.close()
-    exit()
-
-if __name__ == "__main__":
-    client()
+        sent = sock.send(data)
+        total_send += sent
+        data = data[sent:]
+        print 'Sending data'
+    except socket.error, e:
+        if e.errno != e.EAGAIN:
+            raise e
+        print 'Blocking with', len(data), "remaining"
+        select.selct([], [sock], [])
+    assert total_sent == data_size
