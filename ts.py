@@ -4,7 +4,7 @@ import random
 import socket, select
 
 class Ts:
-    def __init__(self, port):
+    def __init__(self, port, filename):
         try:
             ss = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             print("[S]: Server socket created")
@@ -16,11 +16,12 @@ class Ts:
         ss.listen(1)
         
         self.ls, addr = ss.accept()
+        self.filename = filename
        
     def receive_from_client(self):
 
         raw_dat = self.ls.recv(220)
-        cleaned = raw_dat.decode('utf-8')
+        cleaned = raw_dat.decode('utf-8').strip()
         return cleaned
 
     def send_to_client(self, msg):
@@ -29,21 +30,24 @@ class Ts:
     def run(self):
         
 
-        file_name = "PROJ2-DNSTS1.txt"
-
-        
-
-        while(self.ls.fileno() != -1):
-            domain = self.receive_from_client()
+        domain = self.receive_from_client().replace('\n', ' ').replace('\r', '')
+        while(domain):
             print("domain from client: {}".format(domain))
-            self.ret_data(domain, file_name)
+            self.ret_data(domain)
+            domain = self.receive_from_client()
             
         
 
-    def ret_data(self, dns, file_name):
-        with open(file_name, 'r') as f:
+    def ret_data(self, dns):
+        with open(self.filename, 'r') as f:
             for line in f:
-                if(line.split(" ")[0] == dns):
+                
+                compare = line.strip().split(" ")[0]
+                print("checking :{}:, dns is :{}:".format(compare, dns))
+                print(compare == dns)
+                print("because compare is {}".format(compare))
+                print("one is {} long and the other is {}".format(len(compare), len(dns)))
+                if(compare == dns):
                     print("sending {} to client".format(line))
                     self.send_to_client(line)
 

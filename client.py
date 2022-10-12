@@ -19,7 +19,7 @@ def receive_message(sock):
 
 def append_resp(gotten):
     fi = open('RESOLVED.txt', 'a')
-    fi.write(gotten)
+    fi.write(gotten + '\n')
     fi.close()
 
 def client():

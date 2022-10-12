@@ -36,25 +36,23 @@ class Server:
 
     def run_server(self):
         
-        dns_name = self.receive_from_client()
-        while(len(dns_name) != 0):
-            
-            
-            
+        dns_name = self.receive_from_client().strip()
+        while(dns_name):
 
             print("dns from client: {}".format(dns_name))
             self.dns_request(dns_name)
-            
+            time.sleep(3)
             response = self.get_ts_response(dns_name)
             print("dns from a ts: {}".format(response))
             if(not response):
             
                 response = "{} - TIMED OUT".format(dns_name)
-                
-                print("changed response to {}".format(response))
-            
+                #print("changed response to {}".format(response))
+            response = response.replace('\n', ' ').replace('\r', '')
+            print("the next line is what I am sending")
+            print(response)
             self.send_to_client(response)
-            dns_name = self.receive_from_client()
+            dns_name = self.receive_from_client().strip()
         
 
     def send_to_client(self, msg):
