@@ -32,8 +32,6 @@ def get_connection():
     print ("[S]: Got a connection request from a client at {}".format(addr))
 
     file_name = "PROJ2-DNSTS1.txt"
-    # write elements in data into file_name with each element in a seperate line
-    #new_data = receive_from_client(csockid)
 
     new_data = ""
     rec = receive_message(csockid)
