@@ -45,12 +45,19 @@ def client():
         lines.append(line)
     fi.close()
     
-    
+    ans = []
     for i in lines:
+        if(len(i.strip()) == 0):
+            break
         send_message(cs, i)
-        msg = receive_message(cs)
-        append_resp(msg)
+        response = receive_message(cs)
+        ans.append(response)
+    
 
+    fi = open('RESOLVED.txt', 'w')
+    for i in ans:
+        fi.write(i)
+    fi.close()
 
 
     
