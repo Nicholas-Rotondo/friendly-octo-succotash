@@ -54,8 +54,9 @@ class Server:
         data = 'nothing read'
         if(len(can_read) == 0):
             time.sleep(3)
+            can_read, can_write, exceps = select.select([self.client], [], [], 10)
             if(len(can_read) == 0):
-                #nothinghere.com - TIMED OUT
+
                 return False
                 
         for i in can_read:

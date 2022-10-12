@@ -47,10 +47,20 @@ def client():
     
     
     for i in lines:
+        if(len(i.strip()) == 0):
+            break
+        print("client sending {}".foramt(i))
         send_message(cs, i)
-        msg = receive_message(cs)
-        append_resp(msg)
+        
+        response = receive_message(cs)
+        print("client received {}".format(response))
+        append_resp(response)
+    
 
+    #fi = open('RESOLVED.txt', 'w')
+    #for i in ans:
+    #    fi.write(i)
+    #fi.close()
 
 
     
