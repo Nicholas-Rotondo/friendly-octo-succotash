@@ -41,7 +41,7 @@ class Server:
 
             print("dns from client: {}".format(dns_name))
             self.dns_request(dns_name)
-            time.sleep(3)
+            time.sleep(0.5)
             response = self.get_ts_response(dns_name)
             print("dns from a ts: {}".format(response))
             if(not response):
@@ -71,7 +71,7 @@ class Server:
         self.ts2.send(name.encode('utf-8'))
 
     def get_ts_response(self, cli_data):
-        can_read, can_write, exceps = select.select([self.ts1, self.ts2], [], [], 10)
+        can_read, can_write, exceps = select.select([self.ts1, self.ts2], [], [], 1)
         data = 'nothing read'
         if(len(can_read) == 0):
             return False
