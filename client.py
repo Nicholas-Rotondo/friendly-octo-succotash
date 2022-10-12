@@ -49,7 +49,7 @@ def client():
     for i in lines:
         if(len(i.strip()) == 0):
             break
-        print("client sending {}".foramt(i))
+        print("client sending {}".format(i))
         send_message(cs, i)
         
         response = receive_message(cs)

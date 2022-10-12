@@ -3,60 +3,55 @@ import time
 import random
 import socket, select
 
-print("hello")
+class Ts:
+    def __init__(self, port):
+        try:
+            ss = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            print("[S]: Server socket created")
+        except socket.error as err:
+            print('socket open error: {}\n'.format(err))
+            exit()
+        server_binding = ('', port)
+        ss.bind(server_binding)
+        ss.listen(1)
+        
+        self.ls, addr = ss.accept()
+       
+    def receive_from_client(self):
 
-try:
-    ss = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    print("[S]: Server socket created")
-except socket.error as err:
-    print('socket open error: {}\n'.format(err))
-    exit()
+        raw_dat = self.ls.recv(220)
+        cleaned = raw_dat.decode('utf-8')
+        return cleaned
 
-# def receive_message(csockid):
-#     raw_dat = csockid.recv(220)
-#     cleaned = raw_dat.decode('utf-8')
+    def send_to_client(self, msg):
+        self.ls.send(msg.encode('utf-8'))
 
-def receive_from_client(csockid):
-    can_read, can_write, exceps = select.select([csockid], [], [], 10)
-    data = 'nothing read'
-    if(len(can_read) == 0):
-        print("can_read is empty")
-        return False
+    def run(self):
+        
+
+        file_name = "PROJ2-DNSTS1.txt"
+
+        
+
+        while(self.ls.fileno() != -1):
+            domain = self.receive_from_client()
+            print("domain from client: {}".format(domain))
+            self.ret_data(domain, file_name)
+            
+        
+
+    def ret_data(self, dns, file_name):
+        with open(file_name, 'r') as f:
+            for line in f:
+                if(line.split(" ")[0] == dns):
+                    print("sending {} to client".format(line))
+                    self.send_to_client(line)
+
+    def close_connections(self):
+        self.ls.close()
+
+if __name__ == "__main__":
+    ts1 = Ts(50007)
+    ts1.run()
+    ts1.close_connections()
     
-    for i in can_read:
-        data = i.recv(220)
-    print("Received from client, {}".format(data))
-    return data
-
-def send_to_client(csockid, msg):
-    csockid.send(msg.encode('utf-8'))
-
-def get_connection():
-    server_binding = ('', 50007)
-    ss.bind(server_binding)
-    ss.listen(1)
-    host = socket.gethostname()
-    print("[S]: Server host name is {}".format(host))
-    localhost_ip = (socket.gethostbyname(host))
-    print("[S]: Server IP address is {}".format(localhost_ip))
-    csockid, addr = ss.accept()
-    print ("[S]: Got a connection request from a client at {}".format(addr))
-
-    file_name = "PROJ2-DNSTS1.txt"
-
-    domain = receive_from_client(csockid)
-
-    while(domain):
-        ret_data(csockid, domain, file_name)
-        print("domain is, {}".format(domain))
-        domain = receive_from_client(csockid)
-
-def ret_data(csockid, dns, file_name):
-    with open(file_name, 'r') as f:
-        for line in f:
-            if(line.split(" ")[0] == dns):
-                send_to_client(csockid, line)
-
-get_connection()
-ss.close()
-exit()

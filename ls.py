@@ -35,33 +35,37 @@ class Server:
 
 
     def run_server(self):
+        
         dns_name = self.receive_from_client()
-        while(dns_name):
+        while(len(dns_name) != 0):
+            
+            
+            
+
+            print("dns from client: {}".format(dns_name))
             self.dns_request(dns_name)
+            
             response = self.get_ts_response(dns_name)
+            print("dns from a ts: {}".format(response))
+            if(not response):
+            
+                response = "{} - TIMED OUT".format(dns_name)
+                
+                print("changed response to {}".format(response))
+            
             self.send_to_client(response)
             dns_name = self.receive_from_client()
+        
 
     def send_to_client(self, msg):
         self.client.send(msg.encode('utf-8'))
 
         
     def receive_from_client(self):
-        #raw_dat = self.client.recv(220)
-        #cleaned = raw_dat.decode('utf-8')
-        #return cleaned
-        can_read, can_write, exceps = select.select([self.client], [], [], 10)
-        data = 'nothing read'
-        if(len(can_read) == 0):
-            time.sleep(3)
-            can_read, can_write, exceps = select.select([self.client], [], [], 10)
-            if(len(can_read) == 0):
-
-                return False
-                
-        for i in can_read:
-            data = i.recv(220)
-        return data
+        raw_dat = self.client.recv(220)
+        cleaned = raw_dat.decode('utf-8')
+        return cleaned
+        
 
 
     def dns_request(self, name):
@@ -72,10 +76,7 @@ class Server:
         can_read, can_write, exceps = select.select([self.ts1, self.ts2], [], [], 10)
         data = 'nothing read'
         if(len(can_read) == 0):
-            time.sleep(3)
-            if(len(can_read) == 0):
-                #nothinghere.com - TIMED OUT
-                return cli_data + " - TIMED OUT"
+            return False
                 
         for i in can_read:
             data = i.recv(220)
