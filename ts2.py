@@ -20,10 +20,12 @@ def receive_from_client(csockid):
     can_read, can_write, exceps = select.select([csockid], [], [], 10)
     data = 'nothing read'
     if(len(can_read) == 0):
+        print("can_read is empty")
         return False
-       
+    
     for i in can_read:
         data = i.recv(220)
+    print("Received from client, {}".format(data))
     return data
 
 def send_to_client(csockid, msg):
@@ -46,6 +48,7 @@ def get_connection():
 
     while(domain):
         ret_data(csockid, domain, file_name)
+        print("domain is, {}".format(domain))
         domain = receive_from_client(csockid)
 
 def ret_data(csockid, dns, file_name):
