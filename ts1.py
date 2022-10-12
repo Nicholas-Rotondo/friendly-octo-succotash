@@ -12,10 +12,19 @@ except socket.error as err:
     print('socket open error: {}\n'.format(err))
     exit()
 
-def receive_message(csockid):
-    raw_dat = csockid.recv(220)
-    cleaned = raw_dat.decode('utf-8')
-    return cleaned
+# def receive_message(csockid):
+#     raw_dat = csockid.recv(220)
+#     cleaned = raw_dat.decode('utf-8')
+
+def receive_from_client(csockid):
+    can_read, can_write, exceps = select.select([csockid], [], [], 10)
+    data = 'nothing read'
+    if(len(can_read) == 0):
+        return False
+       
+    for i in can_read:
+        data = i.recv(220)
+    return data
 
 def send_to_client(csockid, msg):
     csockid.send(msg.encode('utf-8'))
@@ -33,17 +42,11 @@ def get_connection():
 
     file_name = "PROJ2-DNSTS1.txt"
 
-    new_data = ""
-    rec = receive_message(csockid)
-    while(len(rec) > 0):
-        new_data = new_data + rec
-        rec = receive_message(csockid)
+    domain = receive_from_client(csockid)
 
-    array_data = new_data.split("\n")
-    for i in array_data:
-        print(i)
-        ret_data(csockid, i, file_name)
-
+    while(domain):
+        ret_data(csockid, domain, file_name)
+        domain = receive_from_client(csockid)
 
 def ret_data(csockid, dns, file_name):
     with open(file_name, 'r') as f:
