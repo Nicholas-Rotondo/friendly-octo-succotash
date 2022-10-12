@@ -4,10 +4,23 @@ def send_message(sock, msg):
     sock.send(msg.encode('utf-8'))
 
 def receive_message(sock):
-    raw_dat = sock.recv(100)
+    raw_dat = sock.recv(220)
     #cleaned = str(raw_dat, 'utf-8')
     cleaned = raw_dat.decode('utf-8')
     return cleaned
+
+#def rec_until_done(cs):
+#    gotten = ""
+#    rec = receive_message(cs)
+#    while(rec != None and len(rec) > 0):
+#        gotten = gotten + rec
+#        rec = receive_message(cs)
+#    return rec
+
+def append_resp(gotten):
+    fi = open('RESOLVED.txt', 'a')
+    fi.write(gotten)
+    fi.close()
 
 def client():
     try:
@@ -25,35 +38,25 @@ def client():
     server_binding = (localhost_addr, port)
     cs.connect(server_binding)
 
-    sending = 'GOOGLE.com'
-    send_message(cs, sending)
 
-
-    rec = receive_message(cs)
-    fi = open('RESOLVED.txt', 'w')
-    print >> fi, rec.strip('\n')
-    exit()
-    
-
-    #send from file
+    lines = []
     fi = open('PROJ2-HNS.txt', 'r')
     for line in fi:
-        send_message(cs, line)
+        lines.append(line)
     fi.close()
+    
+    
+    for i in lines:
+        send_message(cs, i)
+        msg = receive_message(cs)
+        append_resp(msg)
 
 
-
-    rec = receive_message(cs)
-    while(len(rec) > 0):
-        gotten = gotten + rec
-        rec = receive_message(cs)
 
     
-    fi = open('RESOLVED.txt', 'w')
-    for line in gotten.split('\n'):
-        if(len(line) > 0):
-            print >> fi, line.strip('\n')
-    fi.close()
+
+    
+    
 
     # close the client socket
     cs.close()

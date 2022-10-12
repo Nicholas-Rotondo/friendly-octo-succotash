@@ -12,7 +12,7 @@ except socket.error as err:
     print('socket open error: {}\n'.format(err))
     exit()
 
-def receive_from_client(csockid):
+def receive_message(csockid):
     raw_dat = csockid.recv(220)
     cleaned = raw_dat.decode('utf-8')
     return cleaned
@@ -42,10 +42,10 @@ def get_connection():
     array_data = new_data.split("\n")
     for i in array_data:
         print(i)
-        ret_data(i, file_name)
+        ret_data(csockid, i, file_name)
 
 
-def ret_data(dns, file_name):
+def ret_data(csockid, dns, file_name):
     with open(file_name, 'r') as f:
         for line in f:
             if(line.split(" ")[0] == dns):
