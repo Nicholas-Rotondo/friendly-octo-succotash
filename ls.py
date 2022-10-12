@@ -31,29 +31,10 @@ class Server:
         print("connected to ts1 at {}:{}".format(localhost_addr, ts2_port))
         
         
+       
+
+
     def run_server(self):
-        gotten = ''
-        rec = self.receive_from_client()
-        while(rec != None and len(rec) > 0):
-            gotten = gotten + rec
-            rec = self.receive_from_client()
-        
-        
-        self.dns_request(gotten)
-
-        broken_up = rec.split("\n")
-        curr = 0
-        gotten = ''
-        resp = self.get_ts_response(broken_up[curr])
-        while(resp != None and len(resp) > 0):
-            gotten = gotten + resp
-            curr = curr + 1
-            resp = self.get_ts_response(broken_up[curr])
-
-        self.send_to_client(gotten)
-
-
-    def get_and_send(self):
         dns_name = self.receive_from_client()
         while(dns_name):
             self.dns_request(dns_name)
