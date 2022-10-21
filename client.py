@@ -33,10 +33,10 @@ def client():
         
     # Define the port on which you want to connect to the server
     port = int(sys.argv[2])
-    localhost_addr = socket.gethostbyname(sys.argv[1])
+    addre = socket.gethostbyname(sys.argv[1])
 
     # connect to the server on local machine
-    server_binding = (localhost_addr, port)
+    server_binding = (addre, port)
     cs.connect(server_binding)
 
 
