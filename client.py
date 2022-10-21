@@ -1,4 +1,5 @@
 import socket
+import sys
 
 def send_message(sock, msg):
     sock.send(msg.encode('utf-8'))
@@ -31,8 +32,8 @@ def client():
         exit()
         
     # Define the port on which you want to connect to the server
-    port = 50006
-    localhost_addr = socket.gethostbyname(socket.gethostname())
+    port = int(sys.argv[2])
+    localhost_addr = socket.gethostbyname(sys.argv[1])
 
     # connect to the server on local machine
     server_binding = (localhost_addr, port)

@@ -1,8 +1,9 @@
 import time
 import socket, select
+import sys
 
 class Server:
-    def __init__(self):
+    def __init__(self, ls_listen_port, ts1_hostname, ts1_listen_port, ts2_hostname, ts2_listen_port):
         try:
             cli = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             self.ts1 = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -11,7 +12,7 @@ class Server:
             print('socket open error: {}\n'.format(err))
             exit()
 
-        cli.bind(('', 50006))
+        cli.bind(('', ls_listen_port))
         
         
         
@@ -20,15 +21,15 @@ class Server:
         print ("[S]: Got a connection request from a client at {}".format(addr))
 
         
-        localhost_addr = socket.gethostbyname(socket.gethostname())
+        
 
-        ts1_port = 50007
-        self.ts1.connect((localhost_addr, ts1_port))
-        print("connected to ts1 at {}:{}".format(localhost_addr, ts1_port))
+        ts1_port = ts1_listen_port
+        self.ts1.connect((ts1_hostname, ts1_port))
+        print("connected to ts1 at {}:{}".format(ts1_hostname, ts1_port))
 
-        ts2_port = 50008
-        self.ts2.connect((localhost_addr, ts2_port))
-        print("connected to ts1 at {}:{}".format(localhost_addr, ts2_port))
+        ts2_port = ts2_listen_port
+        self.ts2.connect((ts2_hostname, ts2_port))
+        print("connected to ts1 at {}:{}".format(ts2_hostname, ts2_port))
         
         
        
@@ -90,7 +91,7 @@ class Server:
   
 
 if __name__ == "__main__":
-    server = Server()
+    server = Server(int(sys.argv[1]), sys.argv[2], int(sys.argv[3]), sys.argv[4], int(sys.argv[5]))
     server.run_server()
     server.close_all_connections()
     
